@@ -1,0 +1,21 @@
+#!/bin/bash
+# Output spoofed of ifconfig for the single purpose of meeting giving CBS a way 
+# to obtain the MAC address (for licensing)
+
+if [[ ${CBS_MAC} ]]; then
+  if [[ ${CBS_MAC^^} = "RANDOM" ]]; then
+    hexchars="0123456789ABCDEF"
+    mac_end=$(
+      for i in {1..10} ; do 
+        echo -n ${hexchars:$(( $RANDOM % 16 )):1} ;
+      done | sed -e 's/\(..\)/:\1/g'
+    )
+    MAC="00${mac_end}"
+  else
+    MAC="${CBS_MAC}"
+  fi
+else
+  MAC=$(cat /sys/class/net/eth*/address)
+fi
+
+echo "    ether ${MAC}"

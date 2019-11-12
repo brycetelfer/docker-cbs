@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  cbs:
+    build: .
+    image: yoff/cbs:latest
+    hostname: cbs.example.com
+    restart: on-failure
+    #volumes:
+    #  #### Critical paths ####
+    #  # config
+    #  - ./cbs/conf:/cbs/conf
+    #  - ./cbs/system:/cbs/system
+    #  # logs
+    #  - ./cbs/logs:/cbs/logs
+    #  # client data
+    #  - ./users:/cbs/users
+    #  - ./users:/users
+    #  #### Branding ####
+    #  # OBC agent downloads
+    #  - ./cbs/download:/cbs/download
+    ports:
+      - "80:8080"
+      - "443:8443"
+      - "9444-9464"
+    environment:
+      - TZ=America/Phoenix
+      - CBS_MAC=02:00:00:00:00:00
