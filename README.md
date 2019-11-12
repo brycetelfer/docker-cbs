@@ -3,29 +3,29 @@ docker image for AhsayCBS v8.3.0.30
 
 
 ## Clone repo and create docker image
-1. `git clone https://github.com/jeffre/docker-cbs.git`
-1. `cd docker-cbs`
-1. `make docker-image`
+    git clone https://github.com/jeffre/docker-cbs.git
+    cd docker-cbs
+    make docker-image
 
 
 ## Create and run docker container
 Quick and dirty:
 
-        docker run -p "80:8080" -p "443:8443" jeffre/cbs
+    docker run -p "80:8080" -p "443:8443" jeffre/cbs
 Using bind mount for important volumes:
 
-        docker run \
-          -p "80:8080" \
-          -p "443:8443" \
-          -v "$(pwd)/cbs/conf:/cbs/conf" \
-          -v "$(pwd)/cbs/download:/cbs/download" \
-          -v "$(pwd)/cbs/logs:/cbs/logs" \
-          -v "$(pwd)/cbs/system:/cbs/system" \
-          -v "$(pwd)/cbs/user:/cbs/user" \
-          jeffre/cbs
+    docker run \
+        -p "80:8080" \
+        -p "443:8443" \
+        -v "$(pwd)/cbs/conf:/cbs/conf" \
+        -v "$(pwd)/cbs/download:/cbs/download" \
+        -v "$(pwd)/cbs/logs:/cbs/logs" \
+        -v "$(pwd)/cbs/system:/cbs/system" \
+        -v "$(pwd)/cbs/user:/cbs/user" \
+        jeffre/cbs
 
 ## Stop running container
-        docker stop --time 60 CONTAINER_NAME
+    docker stop --time 60 CONTAINER_NAME
 
 
 ## Important Paths
