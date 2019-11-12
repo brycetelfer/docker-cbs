@@ -2,11 +2,17 @@
 docker image for AhsayCBS v8.3.0.30
 
 
-## How to
-+ Run (quick and dirty):
+## Clone repo and create docker image
+1. `git clone https://github.com/jeffre/docker-cbs.git`
+1. `cd docker-cbs`
+1. `make docker-image`
 
-        docker run -p "80:8080" -p "443:8443" yoff/cbs
-+ Run (bind mount important volumes): 
+
+## Create and run docker container
+Quick and dirty:
+
+        docker run -p "80:8080" -p "443:8443" jeffre/cbs
+Using bind mount for important volumes:
 
         docker run \
           -p "80:8080" \
@@ -16,9 +22,9 @@ docker image for AhsayCBS v8.3.0.30
           -v "$(pwd)/cbs/logs:/cbs/logs" \
           -v "$(pwd)/cbs/system:/cbs/system" \
           -v "$(pwd)/cbs/user:/cbs/user" \
-          yoff/cbs
-+ Safely stop:
+          jeffre/cbs
 
+## Stop running container
         docker stop --time 60 CONTAINER_NAME
 
 
@@ -30,7 +36,7 @@ docker image for AhsayCBS v8.3.0.30
 + **/cbs/user**: client data
 
 
-## ENV Variables
+## Environment Variables
 + **CBS_MAC** (Empty): Spoofs mac address which is used by ahsay licensing
 (eg: BE:02:A4:D2:14:7F).
 
