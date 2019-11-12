@@ -1,5 +1,5 @@
-# AhsayCBS v8.3.0.30
-proprietary backup service software
+# docker-cbs
+docker image for AhsayCBS v8.3.0.30
 
 
 ## How to
