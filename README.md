@@ -55,7 +55,4 @@ installation tarball
 + `docker stop` (SIGTERM) is caught and triggers `catalina.sh stop` for a
 safe shutdown. If your CBS needs more than 10 seconds to stop, be sure to use
 the `--time n` flag to prevent docker from prematurely resorting to `kill`.
-
-
-## To-dos
-+ Explore allowing SSLv3Hello for agents below v6.21.2.0
++ Add support for SSLv2Hello allowing clients on versions less than v6.21.2.0 to connect

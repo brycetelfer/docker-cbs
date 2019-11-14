@@ -11,7 +11,7 @@ ENV PATH="${PATH}:${APP_HOME}/bin:/bootstrap" \
 WORKDIR "${APP_HOME}"
 
 
-# 'bootstrap' contains the entrypoint.sh, SIGTERM receiver,
+# 'bootstrap' contains docker-entrypoint.sh, SIGTERM receiver,
 # default files, and a pseudo ifconfig
 COPY bootstrap/ /bootstrap
 
@@ -80,9 +80,11 @@ RUN \
 #
 #
 # Change default http(s) ports to 8080 and 8443
+# Add SSLv2Hello (allow clients below v6.21.2.0 to connect)
   && sed -i "conf/server.xml" \
     -e 's|port="80"|port="8080"|' \
     -e 's|port="443"|port="8443"|' \
+    -e 's|protocols="TLSv1+TLSv1.1+TLSv1.2"|protocols="SSLv2Hello+TLSv1+TLSv1.1+TLSv1.2"|' \
 #
 #
 # Move default conf files aside for no-clobber copy during docker-entrypoint.sh
