@@ -20,8 +20,8 @@ services:
     #  # OBC agent downloads
     #  - ./cbs/download:/cbs/download
     ports:
-      - "80:8080"
-      - "443:8443"
+      - "80:80"
+      - "443:443"
       - "9444-9464"
     environment:
       - TZ=America/Phoenix

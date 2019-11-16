@@ -1,5 +1,5 @@
 FROM centos:latest
-EXPOSE 8080 8443
+EXPOSE 80 443
 ARG UID="400"
 ARG GID="400"
 ARG APP_HOME
@@ -35,60 +35,63 @@ RUN \
 #
 #
 # Set owner and group to 'ahsay'
-  && chown -R ahsay:ahsay "." "/bootstrap" "${DEFAULT_FILES}"
-
-
-# De-escalate from root
-USER ahsay
-
-
-# Unprivileged execution
-RUN \
+  && chown -R ahsay:ahsay "." "/bootstrap" "${DEFAULT_FILES}" \
 #
 #
-# Download and Extact CBS image
-  curl -fsSL "${SOURCE}" \
-  | tar \
-    --exclude="bin/FbdX64" \
-    --exclude="bin/FbdX86" \
-    --exclude="bin/SosX64" \
-    --exclude="bin/cbs-bsd" \
-    --exclude="bin/cbs-openbsd" \
-    --exclude="bin/cbs-systemd" \
-    --exclude="bin/cbs-sysv" \
-    --exclude="icons" \
-    --exclude="java-linux-x64/lib/amd64/libjfxwebkit.so" \
-    --exclude="java-linux-x64/lib/fonts/ipam.ttf" \
-    --exclude="java-linux-x64/lib/fonts/uming.ttc" \
-    --exclude="java-linux-x64/lib/fonts/UnDotum.ttf" \
-    --exclude="java-linux-x64/lib/fonts/VL-Gothic-Regular.ttf" \
-    --exclude="java-linux-x64/lib/ext/jfxrt.jar" \
-    --exclude="java-linux-x86/lib/i386/libjfxwebkit.so" \
-    --exclude="java-linux-x86/lib/fonts/ipam.ttf" \
-    --exclude="java-linux-x86/lib/fonts/uming.ttc" \
-    --exclude="java-linux-x86/lib/fonts/UnDotum.ttf" \
-    --exclude="java-linux-x86/lib/fonts/VL-Gothic-Regular.ttf" \
-    --exclude="java-linux-x86/lib/ext/jfxrt.jar" \
-    --exclude="lib/FbdX64" \
-    --exclude="lib/FbdX86" \
-    --exclude="lib/SosX64" \
-    --exclude="licenses" \
-    --exclude="temp" \
-    --exclude="termsofuse" \
-    --exclude="tomcat/bin/*.bat" \
-    -xzf - \
+# Download and extract CBS image (as ahsay)
+  && su ahsay -c ' \
+    curl -fsSL "'"${SOURCE}"'" \
+    | tar \
+      --exclude="bin/FbdX64" \
+      --exclude="bin/FbdX86" \
+      --exclude="bin/SosX64" \
+      --exclude="bin/cbs-bsd" \
+      --exclude="bin/cbs-openbsd" \
+      --exclude="bin/cbs-systemd" \
+      --exclude="bin/cbs-sysv" \
+      --exclude="icons" \
+      --exclude="java-linux-x64/lib/amd64/libjfxwebkit.so" \
+      --exclude="java-linux-x64/lib/fonts/ipam.ttf" \
+      --exclude="java-linux-x64/lib/fonts/uming.ttc" \
+      --exclude="java-linux-x64/lib/fonts/UnDotum.ttf" \
+      --exclude="java-linux-x64/lib/fonts/VL-Gothic-Regular.ttf" \
+      --exclude="java-linux-x64/lib/ext/jfxrt.jar" \
+      --exclude="java-linux-x86/lib/i386/libjfxwebkit.so" \
+      --exclude="java-linux-x86/lib/fonts/ipam.ttf" \
+      --exclude="java-linux-x86/lib/fonts/uming.ttc" \
+      --exclude="java-linux-x86/lib/fonts/UnDotum.ttf" \
+      --exclude="java-linux-x86/lib/fonts/VL-Gothic-Regular.ttf" \
+      --exclude="java-linux-x86/lib/ext/jfxrt.jar" \
+      --exclude="lib/FbdX64" \
+      --exclude="lib/FbdX86" \
+      --exclude="lib/SosX64" \
+      --exclude="licenses" \
+      --exclude="temp" \
+      --exclude="termsofuse" \
+      --exclude="tomcat/bin/*.bat" \
+      -xzf - \
+  ' \
 #
 #
-# Change default http(s) ports to 8080 and 8443
 # Add SSLv2Hello (allow clients below v6.21.2.0 to connect)
   && sed -i "conf/server.xml" \
-    -e 's|port="80"|port="8080"|' \
-    -e 's|port="443"|port="8443"|' \
     -e 's|protocols="TLSv1+TLSv1.1+TLSv1.2"|protocols="SSLv2Hello+TLSv1+TLSv1.1+TLSv1.2"|' \
 #
 #
 # Move default conf files aside for no-clobber copy during docker-entrypoint.sh
-  && mv "./conf/"* "${DEFAULT_FILES}/conf"
+  && mv "./conf/"* "${DEFAULT_FILES}/conf" \
+#
+#
+# Permit tomcat to listen on ports < 1024
+  && setcap cap_net_bind_service=+ep java-linux-x64/bin/java \
+  && setcap cap_net_bind_service=+ep java-linux-x86/bin/java \
+  && sharedir=$(find java-*/lib -name "libjli.so" | awk '{print substr($0, 0, length($0)-10)}') \
+  && echo "$sharedir" > /etc/ld.so.conf.d/java-libjli.conf \
+  && ldconfig -v
+
+
+# De-escalate from root
+USER ahsay
 
 
 # Persisting volumes might be useful feature to consider in the future but for
