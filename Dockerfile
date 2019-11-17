@@ -42,8 +42,7 @@ RUN \
 #
 # Download and extract CBS image (as ahsay)
   && su ahsay -c ' \
-    #curl -fsSL "'"${SOURCE}"'" \
-    cat cbs-nix.tar.gz \
+    curl -fsSL "'"${SOURCE}"'" \
     | tar \
       --exclude="bin/FbdX64" \
       --exclude="bin/FbdX86" \
