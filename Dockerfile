@@ -14,6 +14,7 @@ WORKDIR "${APP_HOME}"
 # 'bootstrap' contains docker-entrypoint.sh, SIGTERM receiver,
 # default files, and a pseudo ifconfig
 COPY bootstrap/ /bootstrap
+#COPY cbs-nix.tar.gz/ ./  # Used during local testing
 
 
 # Privileged execution
@@ -27,11 +28,12 @@ RUN \
 #
 # Ensure root paths exist
   && test -d "${DEFAULT_FILES}/conf" || mkdir -p "${DEFAULT_FILES}/conf" \
+  && test -d "${DEFAULT_FILES}/download" || mkdir -p "${DEFAULT_FILES}/download" \
   && test -d "${APP_HOME}/conf" || mkdir -p "${APP_HOME}/conf" \
-  && test -d "${APP_HOME}/system" || mkdir -p "${APP_HOME}/system" \
-  && test -d "${APP_HOME}/logs" || mkdir -p "${APP_HOME}/logs" \
-  && test -d "${APP_HOME}/user" || mkdir -p "${APP_HOME}/user" \
   && test -d "${APP_HOME}/download" || mkdir -p "${APP_HOME}/download" \
+  && test -d "${APP_HOME}/logs" || mkdir -p "${APP_HOME}/logs" \
+  && test -d "${APP_HOME}/system" || mkdir -p "${APP_HOME}/system" \
+  && test -d "${APP_HOME}/user" || mkdir -p "${APP_HOME}/user" \
 #
 #
 # Set owner and group to 'ahsay'
@@ -40,7 +42,8 @@ RUN \
 #
 # Download and extract CBS image (as ahsay)
   && su ahsay -c ' \
-    curl -fsSL "'"${SOURCE}"'" \
+    #curl -fsSL "'"${SOURCE}"'" \
+    cat cbs-nix.tar.gz \
     | tar \
       --exclude="bin/FbdX64" \
       --exclude="bin/FbdX86" \
@@ -78,8 +81,9 @@ RUN \
     -e 's|protocols="TLSv1+TLSv1.1+TLSv1.2"|protocols="SSLv2Hello+TLSv1+TLSv1.1+TLSv1.2"|' \
 #
 #
-# Move default conf files aside for no-clobber copy during docker-entrypoint.sh
+# Move 'conf' and 'download' files aside for no-clobber copy during docker-entrypoint.sh
   && mv "./conf/"* "${DEFAULT_FILES}/conf" \
+  && mv "./download/"* "${DEFAULT_FILES}/download" \
 #
 #
 # Permit tomcat to listen on ports < 1024

@@ -50,9 +50,12 @@ installation tarball
 
 
 ## Features and notes
-+ The application runs as the limited user "ahsay" (default 400:400)
-+ Catalina is started as a foreground process
++ The application runs as the limited user "ahsay" (default 400:400).
++ Catalina is started as a foreground process.
 + `docker stop` (SIGTERM) is caught and triggers `catalina.sh stop` for a
 safe shutdown. If your CBS needs more than 10 seconds to stop, be sure to use
 the `--time n` flag to prevent docker from prematurely resorting to `kill`.
-+ Add support for SSLv2Hello allowing clients on versions less than v6.21.2.0 to connect
++ Add support for SSLv2Hello allowing clients on versions less than v6.21.2.0 to connect.
++ Both `/cbs/conf` and `/cbs/download` paths get populated with default files if files
+of the same name do not exist prior to the start of the container (docker-entrypoint.sh uses 
+`cp --no-clobber`).
