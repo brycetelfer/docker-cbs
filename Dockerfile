@@ -14,7 +14,6 @@ WORKDIR "${APP_HOME}"
 # 'bootstrap' contains docker-entrypoint.sh, SIGTERM receiver,
 # default files, and a pseudo ifconfig
 COPY bootstrap/ /bootstrap
-#COPY cbs-nix.tar.gz/ ./  # Used during local testing
 
 
 # Privileged execution
@@ -44,6 +43,7 @@ RUN \
   && su ahsay -c ' \
     curl -fsSL "'"${SOURCE}"'" \
     | tar \
+      --anchored \
       --exclude="bin/FbdX64" \
       --exclude="bin/FbdX86" \
       --exclude="bin/SosX64" \
