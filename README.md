@@ -32,7 +32,7 @@ Using bind mount for important volumes:
 + **/cbs/conf**: configuration (including ssl certs and user profiles)
 + **/cbs/download**: agent download folder
 + **/cbs/logs**: access logs and context logs
-+ **/cbs/system**: policies and system logs 
++ **/cbs/system**: policies, system logs, and temp path for agentless cloud backup
 + **/cbs/user**: client data
 
 
@@ -45,8 +45,9 @@ Using bind mount for important volumes:
 + **APP_HOME** (/cbs): path to install app
 + **UID** (400): id of ahsay user
 + **GID** (400): group id of ahsay user
-+ **SOURCE** (http://ahsay-dn.ahsay.com/v8/83030/cbs-nix.tar.gz): URL for CBS
++ **INSTALLER** (http://ahsay-dn.ahsay.com/v8/83030/cbs-nix.tar.gz): URL for CBS
 installation tarball
++ **HOTFIXES**:  list of space-separated URLs to download hotfixes
 
 
 ## Features and notes
