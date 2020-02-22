@@ -1,20 +1,20 @@
-version: '2'
+version: '3.6'
 
 services:
   cbs:
     build: .
-    image: yoff/cbs:latest
-    hostname: cbs.example.com
+    image: jeffre/cbs:8.3.0.101
+    hostname: portal.allinternet.com.au
     restart: on-failure
-    #volumes:
-    #  #### Critical paths ####
+    volumes:
+    #### Critical paths ####
     #  # config
-    #  - ./cbs/conf:/cbs/conf
-    #  - ./cbs/system:/cbs/system
+      - /data/cbs/conf:/cbs/conf
+      - /data/cbs/system:/cbs/system
     #  # logs
-    #  - ./cbs/logs:/cbs/logs
+      - /data/cbs/logs:/cbs/logs
     #  # client data
-    #  - ./users:/cbs/users
+      - /data/users:/cbs/users
     #  - ./users:/users
     #  #### Branding ####
     #  # OBC agent downloads
@@ -24,5 +24,5 @@ services:
       - "443:443"
       - "9444-9464"
     environment:
-      - TZ=America/Phoenix
-      - CBS_MAC=02:00:00:00:00:00
+      - TZ=${TZ}
+      - CBS_MAC=00:1a:4d:4a:a9:a7
