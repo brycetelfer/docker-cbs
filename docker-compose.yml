@@ -24,5 +24,5 @@ services:
       - "443:443"
       - "9444-9464"
     environment:
-      - TZ=${TZ}
+      - TZ=Australia/Queensland
       - CBS_MAC=00:1a:4d:4a:a9:a7
